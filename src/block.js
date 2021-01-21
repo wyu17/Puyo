@@ -1,15 +1,15 @@
-export const block = {
+export const BLOCK = {
     R: {
-        color: '255, 0, 0'
+        color: 'RED'
     },
     G: {
-        color: '0, 255, 0'
+        color: 'GREEN'
     },
     B: {
-        color: '0, 0, 255'
+        color: 'BLUE'
     },
     O: {
-        color: '0, 0, 0'
+        color: 'EMPTY'
     },
 }
 
@@ -17,5 +17,5 @@ export const randomBlock = () => {
     const block = 'RGB';
     // can't reach the final element, the empty cell
     const randomBlock = block[Math.floor(Math.random() * block.length)];
-    return block[randomBlock];
+    return BLOCK[randomBlock];
 }

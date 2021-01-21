@@ -1,0 +1,19 @@
+body {
+    width: auto;
+    padding-left: 100px;
+}
+
+/* Seperating the style for each type of block leads to some code duplication, 
+but allows for more options down the line for styling different coloured blocks differently */
+
+.RED {
+    background-color: red;
+}
+
+.GREEN {
+    background-color: green;
+}
+
+.BLUE {
+    background-color: blue;
+}
