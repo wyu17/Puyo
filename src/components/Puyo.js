@@ -3,7 +3,7 @@ import React from 'react';
 import { createStage as createNewStage } from '../gameHelpers';
 import Stage from './Stage';
 import Display from './Display';
-import StartButton from './StartButton';
+import Button from './Button';
 
 import "./Puyo.css";
 
@@ -12,7 +12,7 @@ const Puyo = () => {
     <div className = 'puyo'>
       <aside>
         <Display text="Score" />
-        <StartButton />
+        <Button />
       </aside>
       <Stage stage = {createNewStage()} />
     </div>
