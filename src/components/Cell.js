@@ -1,11 +1,9 @@
 import React from 'react';
-import { BLOCK } from '../block';
 import './Cell.css';
 
-const Cell = ({ type }) => (
-  <div type = {type} className={BLOCK[type].color}>
-    celldoom
+const Cell = (props) => (
+  <div className={props.type.color}>
     </div>
-)
+);
 
 export default Cell;

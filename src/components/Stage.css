@@ -1,0 +1,16 @@
+/* Look into sharing variables with the block.js file, duplication right now */
+:root {
+  --stage_width: 10;
+  --stage_height: 20;
+  --cell_length: 1.25vw;
+}
+
+.stage {
+  display: grid;
+  /* We want stage_height number of rows and stage_width number of columns*/
+  grid-template-rows: repeat(var(--stage_height), var(--cell_length));
+  grid-template-columns: repeat(var(--stage_width), var(--cell_length));
+  border: 2px solid;
+  grid-gap: 1px;
+  border-color: black;
+}

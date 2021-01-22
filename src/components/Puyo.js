@@ -1,20 +1,20 @@
 import React from 'react';
 
-import { createStage } from '../gameHelpers';
+import { createStage as createNewStage } from '../gameHelpers';
 import Stage from './Stage';
 import Display from './Display';
 import StartButton from './StartButton';
 
+import "./Puyo.css";
+
 const Puyo = () => {
   return (
-    <div>
-      <Stage stage = {createStage()} />
+    <div className = 'puyo'>
       <aside>
-        <div>
-          <Display text="Score" />
-        </div>
+        <Display text="Score" />
         <StartButton />
       </aside>
+      <Stage stage = {createNewStage()} />
     </div>
   );
 };

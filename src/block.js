@@ -1,15 +1,16 @@
-export const BLOCK = {
+// The types of blocks availiable
+const BLOCK = {
     R: {
-        color: 'RED'
+        color: "RED"
     },
     G: {
-        color: 'GREEN'
+        color: "GREEN"
     },
     B: {
-        color: 'BLUE'
+        color: "BLUE"
     },
     O: {
-        color: 'EMPTY'
+        color: "EMPTY"
     },
 }
 
@@ -18,4 +19,8 @@ export const randomBlock = () => {
     // can't reach the final element, the empty cell
     const randomBlock = block[Math.floor(Math.random() * block.length)];
     return BLOCK[randomBlock];
+}
+
+export const emptyBlock = () => {
+    return BLOCK['O'];
 }

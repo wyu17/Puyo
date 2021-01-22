@@ -1,0 +1,14 @@
+.puyo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10vh;
+    margin: 0 auto;
+}
+
+aside {
+    width: 100%;
+    max-width: 200px;
+    display: block;
+    padding: 0 20px;
+}
