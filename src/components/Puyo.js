@@ -51,10 +51,6 @@ const Puyo = () => {
     }
   }
 
-  const dab = () => {
-    console.log("dragon");
-  }
-
   // Different screen for game over
   if (!gameOver) {
   return (
@@ -62,7 +58,7 @@ const Puyo = () => {
       <aside>
         <Display text="Score" />
         <div className = "startButton">
-          <Button callBack = { dab } text = "New Game"/>
+          <Button callBack = { startGame } text = "New Game"/>
         </div>
       </aside>
       <Stage stage = {stage} />
