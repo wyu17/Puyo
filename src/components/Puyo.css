@@ -12,3 +12,10 @@ aside {
     display: block;
     padding: 0 20px;
 }
+
+.startButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 20px 0;
+}
