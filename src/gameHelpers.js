@@ -1,7 +1,12 @@
-export var stage_width = 10;
-export var stage_height = 20;
+import Cell from './components/Cell';
+import { randomBlock } from './block';
+import { emptyBlock } from './block';
 
-export const createStage = () =>
-    Array.from(Array(stage_height), () => 
-    new Array(stage_width).fill([0, 'clear'])
-    )
+export var STAGE_WIDTH = 6;
+export var STAGE_HEIGHT = 13;
+
+export var PUYO_COL = 3;
+export var PUYO_ROW = 0;
+
+export const createStage = () => Array.from(Array(STAGE_HEIGHT), () => new Array(STAGE_WIDTH).fill(<Cell type = {emptyBlock().color}/>));
+

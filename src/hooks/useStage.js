@@ -1,29 +1,34 @@
-import { useState, useEffect } from 'react';
-import { createStage } from '../gameHelpers';
+import { useState, useEffect, useCallback } from 'react';
+import { createStage, STAGE_HEIGHT, STAGE_WIDTH } from '../gameHelpers';
+import Cell from '../components/Cell';
+import { randomBlock } from '../block';
+import { emptyBlock } from '../block';
+import { BLOCK } from '../block';
 
-export const useStage = (player, resetPlayer) => {
-    const [stage, setStage] = useState(createStage());
+export const useStage = (currentBlock, resetCurrentBlock) => {
+    // Initial State
+    const [stage, setStage] = useState(Array.from(Array(STAGE_HEIGHT), () => new Array(STAGE_WIDTH).fill(<Cell type = {emptyBlock().color}/>)));
 
-    useEffect (() => {
-        const updateStage = prevStage => {
-            const newStage = prevStage.map(row => 
-                row.map(cell => (cell[1] === 'clear' ? [0, 'clear'] : cell)),
-                );
-        
-            player.shape.forEach((row, y) => {
-                row.forEach((value, x) => {
-                    if (value !== 0) {
-                        newStage[y + player.pos.y][x + player.pos.x] = [
-                            value,
-                            `${player.collided ? 'merged' : 'clear'}`,
-                        ];
-                    }
-                });
+    const updateStage = useCallback ((currentBlock, prevStage) => {
+        let newStage = createStage();
+        // Will need to implement some form of keeping blocks saved
+        currentBlock.shape.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value !== 0) {
+                    // to:do guarantee different colours between the top and bottom
+                    // add some conditions to prevent out of bounds
+                    newStage[y + currentBlock.position.y][x + currentBlock.position.x] = <Cell type = {currentBlock.color}/>;
+                }
             });
-            return newStage;
-        }
-        setStage(prev => updateStage(prev));
-    }, [player.collided, player.pos.x, player.pos.y, player.tetromino]);
+        });
+        return newStage;
+    }, []);
 
-    return [stage, setStage];
+    const resetStage = useCallback((currentBlock) => {
+        let newStage = createStage();
+        newStage = updateStage(currentBlock, newStage);
+        return newStage;
+    }, [updateStage]);
+
+    return [stage, setStage, resetStage, updateStage];
 }

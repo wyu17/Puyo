@@ -1,5 +1,5 @@
 // The types of blocks availiable
-const BLOCK = {
+export const BLOCK = {
     R: {
         color: "RED"
     },

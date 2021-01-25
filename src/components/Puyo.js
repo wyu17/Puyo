@@ -6,7 +6,7 @@ import Display from './Display';
 import Button from './Button';
 
 import { useState } from 'react';
-import { usePlayer } from '../hooks/usePlayer';
+import { useCurrentBlock } from '../hooks/useCurrentBlock';
 import { useStage } from '../hooks/useStage';
 
 import "./Puyo.css";
@@ -15,38 +15,29 @@ import "./Puyo.css";
 const Puyo = () => {
   // GameOver is initially false
   const [gameOver, setGameOver] = useState(false);
-
-  const [player, updatePlayerPos, resetPlayer] = usePlayer();
-  const [stage, setStage] = useStage(player);
+  const [currentBlock, setCurBlock, updateCurPos, resetCurPos] = useCurrentBlock();
+  const [stage, setStage, resetStage, updateStage] = useStage(currentBlock);
 
   console.log("rerender");
 
-  const moveBlock = dir => {
-    updatePlayerPos ({x: dir, y: 0});
+  const moveBlock = (xdir, ydir) => {
+    setCurBlock(updateCurPos(currentBlock, xdir, ydir));
+    setStage(updateStage(currentBlock, stage));
   }
   
   const startGame = () => {
-    console.log('true');
-    setStage(createNewStage());
-    resetPlayer();
-  }
-  
-  const drop = () => {
-    updatePlayerPos({ x: 0, y : 1, collided: false })
-  }
-  
-  const dropPlayer = () => {
-    drop();
+    setCurBlock(resetCurPos());
+    setStage(resetStage(currentBlock));
   }
   
   const move = ({ keyCode }) => {
     if (!gameOver) {
       if (keyCode === 37) {
-          moveBlock(-1);
+          moveBlock(-1, 0);
       } else if (keyCode === 39) {
-          moveBlock(1);
+          moveBlock(1, 0);
       } else if (keyCode === 40) {
-          dropPlayer()
+          moveBlock(0, 1)
       }
     }
   }
@@ -61,7 +52,7 @@ const Puyo = () => {
           <Button callBack = { startGame } text = "New Game"/>
         </div>
       </aside>
-      <Stage stage = {stage} />
+      <Stage stage = { stage } />
     </div>
   );
   } else {

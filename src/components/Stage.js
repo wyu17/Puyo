@@ -6,7 +6,7 @@ import './Stage.css';
 
 const Stage = (props) => (
   <div className = 'stage'>
-    {props.stage.map(row => row.map((cell, x) => <Cell type = {emptyBlock()}/>))}
+    {props.stage}
   </div>
 );
 

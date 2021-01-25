@@ -1,8 +1,8 @@
 /* Look into sharing variables with the block.js file, duplication right now */
 :root {
-  --stage_width: 10;
-  --stage_height: 20;
-  --cell_length: 1.25vw;
+  --stage_width: 6;
+  --stage_height: 13;
+  --cell_length: 2.5vw;
 }
 
 .stage {
