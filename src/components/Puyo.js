@@ -16,7 +16,7 @@ import "./Puyo.css";
 const Puyo = () => {
   // GameOver is initially false
   const [gameOver, setGameOver] = useState(false);
-  const [currentBlock, setCurBlock, updateCurPos, resetCurPos] = useCurrentBlock();
+  const [currentBlock, setCurBlock, updateCurPos, resetCurPos, rotateCurBlock] = useCurrentBlock();
   const [stage, setStage, resetStage, updateStage] = useStage(currentBlock);
 
   console.log("rerender");
@@ -32,10 +32,19 @@ const Puyo = () => {
     }
   }
 
+  const rotateBlock = () => {
+    if (true){
+      let block = rotateCurBlock(currentBlock);
+      setCurBlock(block);
+      setStage(updateStage(block, stage));
+    }
+  }
+
   const moveBlock = (xdir, ydir) => {
     if (checkBoundaries(currentBlock, xdir, ydir)) {
-      setCurBlock(updateCurPos(currentBlock, xdir, ydir));
-      setStage(updateStage(currentBlock, stage));
+      let block = updateCurPos(currentBlock, xdir, ydir)
+      setCurBlock(block);
+      setStage(updateStage(block, stage));
   }
   }
   
@@ -55,6 +64,8 @@ const Puyo = () => {
           moveBlock(1, 0);
       } else if (keyCode === 40) {
           moveBlock(0, 1)
+      } else if (keyCode === 38) {
+         rotateBlock();
       }
     }
   }

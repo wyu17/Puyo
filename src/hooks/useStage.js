@@ -14,9 +14,15 @@ export const useStage = (currentBlock, resetCurrentBlock) => {
         let newStage = createStage();
         // Will need to implement some form of keeping blocks saved
         // to:do guarantee different colours between the top and bottom
-        // add some conditions to prevent out of bounds
-        newStage[currentBlock.position.y][currentBlock.position.x] = <Cell type = {currentBlock.color}/>;
-        newStage[currentBlock.position.y + 1][currentBlock.position.x] = <Cell type = {currentBlock.color1}/>;
+        let temp = (currentBlock.dir > 1) ? currentBlock.color1 : currentBlock.color;
+        let tempcolor1 =  (currentBlock.dir > 1) ? currentBlock.color : currentBlock.color1;
+        newStage[currentBlock.position.y][currentBlock.position.x] = <Cell type = {temp}/>;
+        
+        if (currentBlock.dir === 0 || currentBlock.dir === 2) {
+            newStage[currentBlock.position.y + 1][currentBlock.position.x] = <Cell type = {tempcolor1}/>;
+        } else {
+            newStage[currentBlock.position.y][currentBlock.position.x - 1] = <Cell type = {tempcolor1}/>;
+        }
         return newStage;
     }, []);
 
