@@ -10,7 +10,8 @@ export const useCurrentBlock = () => {
             ['I'],
             ['I']
           ],
-        color: randomBlock().color,
+        color: 'EMPTY',
+        color1: 'EMPTY',
         collided: false
     });
     
@@ -19,18 +20,20 @@ export const useCurrentBlock = () => {
             position: {x : (prev.position.x += x), y: (prev.position.y += y)},
             shape: prev.shape,
             color: prev.color,
+            color1: prev.color1,
             collided: prev.collided,
         };
     };
 
-    const resetCurPos = () => {
+    const resetCurPos = (bb, dd) => {
         return {
             position: { x: PUYO_COL, y: PUYO_ROW },
             shape: [
                 ['I'],
                 ['I']
               ],
-            color: randomBlock().color,
+            color: bb,
+            color1: dd,
             collided: false,
         };
     };

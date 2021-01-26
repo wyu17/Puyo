@@ -4,6 +4,7 @@ import Cell from '../components/Cell';
 import { randomBlock } from '../block';
 import { emptyBlock } from '../block';
 import { BLOCK } from '../block';
+import { PUYO_COL, PUYO_ROW } from '../gameHelpers';
 
 export const useStage = (currentBlock, resetCurrentBlock) => {
     // Initial State
@@ -12,23 +13,19 @@ export const useStage = (currentBlock, resetCurrentBlock) => {
     const updateStage = useCallback ((currentBlock, prevStage) => {
         let newStage = createStage();
         // Will need to implement some form of keeping blocks saved
-        currentBlock.shape.forEach((row, y) => {
-            row.forEach((value, x) => {
-                if (value !== 0) {
-                    // to:do guarantee different colours between the top and bottom
-                    // add some conditions to prevent out of bounds
-                    newStage[y + currentBlock.position.y][x + currentBlock.position.x] = <Cell type = {currentBlock.color}/>;
-                }
-            });
-        });
+        // to:do guarantee different colours between the top and bottom
+        // add some conditions to prevent out of bounds
+        newStage[currentBlock.position.y][currentBlock.position.x] = <Cell type = {currentBlock.color}/>;
+        newStage[currentBlock.position.y + 1][currentBlock.position.x] = <Cell type = {currentBlock.color1}/>;
         return newStage;
     }, []);
 
-    const resetStage = useCallback((currentBlock) => {
+    const resetStage = useCallback((color, color1) => {
         let newStage = createStage();
-        newStage = updateStage(currentBlock, newStage);
+        newStage[PUYO_ROW][PUYO_COL] = <Cell type = {color}/>;
+        newStage[PUYO_ROW + 1][PUYO_COL] = <Cell type = {color1}/>;
         return newStage;
-    }, [updateStage]);
+    }, []);
 
     return [stage, setStage, resetStage, updateStage];
 }

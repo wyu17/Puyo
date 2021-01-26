@@ -14,6 +14,7 @@ export const BLOCK = {
     },
 }
 
+// Find some way to to generate numbers for no double colour block
 export const randomBlock = () => {
     const block = 'RGB';
     // can't reach the final element, the empty cell
