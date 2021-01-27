@@ -32,11 +32,24 @@ const Puyo = () => {
     }
   }
 
+  const checkRotationBoundaries = (currentBlock) => {
+    let xPos = currentBlock.position.x;
+    let yPos = currentBlock.position.y;
+    let dir = currentBlock.dir;
+    // Prevents rotation from upright to right on the right edge, rotating down on the bottom and rotating to the left on the left edge
+    if ((dir === 0 && xPos === STAGE_WIDTH - 1) || (dir === 1 && yPos === STAGE_HEIGHT - 1) || (dir === 2 && xPos === 0)) {
+      return false;
+    } else {
+      return true;
+    }
+  } 
+
   const rotateBlock = () => {
-    if (true){
+    if (checkRotationBoundaries(currentBlock)){
       let block = rotateCurBlock(currentBlock);
       setCurBlock(block);
       setStage(updateStage(block, stage));
+      //checkCollision();
     }
   }
 
