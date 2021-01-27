@@ -21,11 +21,11 @@ export const useCurrentBlock = () => {
         };
     };
 
-    const resetCurPos = (bb, dd) => {
+    const resetCurPos = (upperColor, lowerColor) => {
         return {
             position: { x: PUYO_COL, y: PUYO_ROW },
-            color: bb,
-            color1: dd,
+            color: upperColor,
+            color1: lowerColor,
             dir: 0
         };
     };
