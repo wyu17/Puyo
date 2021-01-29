@@ -45,8 +45,10 @@ const Puyo = () => {
   } 
 
   const checkCollision = (block, stage) => {
-    console.log(block.position.y);
-    if (block.position.y === STAGE_HEIGHT - 2) {
+    if ((block.position.y === STAGE_HEIGHT - 2) || (stage[block.position2.y + 1][block.position2.x].props.type != "EMPTY") || 
+    ((block.dir === 1 || block.dir === 3) && stage[block.position.y + 1][block.position.x].props.type != "EMPTY")) {
+      console.log(stage[block.position.y + 1][block.position.x].props.type);
+      console.log((block.dir === 1 || block.dir === 3) && stage[block.position.y + 1][block.position.x].props.type != "EMPTY");
       return true;
     } else {
       return false;
@@ -59,7 +61,8 @@ const Puyo = () => {
     let lowerColor = randomBlock().color;
     let newStage = registerCollision(block, stage, upperColor, lowerColor);
     setStage(newStage);
-    setCurBlock(resetCurPos(upperColor, lowerColor));
+    let newBlock = resetCurPos(upperColor, lowerColor)
+    setCurBlock(newBlock);
   }
 
   const rotateBlock = (prevPosition, prevPosition2) => {
@@ -73,11 +76,13 @@ const Puyo = () => {
   const moveBlock = (xdir, ydir, prevPosition, prevPosition2) => {
     if (checkBoundaries(currentBlock, xdir, ydir)) {
       let block = updateCurPos(currentBlock, xdir, ydir);
-      setStage(updateStage(block, stage, prevPosition, prevPosition2));
-      if (checkCollision(block, stage)) {
-        handleCollision(block, stage);
-      }
-      setCurBlock(block);
+      let curStage = updateStage(block, stage, prevPosition, prevPosition2);
+      setStage(curStage);
+      if (checkCollision(block, curStage)) {
+        handleCollision(block, curStage);
+      } else {
+        setCurBlock(block);
+    }
   }
   }
   

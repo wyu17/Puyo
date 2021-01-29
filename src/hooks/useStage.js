@@ -37,13 +37,15 @@ export const useStage = (currentBlock, resetCurrentBlock) => {
         return newStage;
     }, []);
 
-    const registerCollision = (block, stage) => {
+    const registerCollision = (block, stage, color, color1) => {
         let newStage = createStage();
         for (let i = 0; i < STAGE_HEIGHT; i++) {
             for (let j = 0; j < STAGE_WIDTH; j++) {
                 newStage[i][j] = stage[i][j];
             }
         }
+        newStage[PUYO_ROW][PUYO_COL] = <Cell type = {color}/>;
+        newStage[PUYO_ROW + 1][PUYO_COL] = <Cell type = {color1}/>;
         return newStage;
     }
 
