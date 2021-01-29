@@ -10,19 +10,23 @@ export const useStage = (currentBlock, resetCurrentBlock) => {
     // Initial State
     const [stage, setStage] = useState(Array.from(Array(STAGE_HEIGHT), () => new Array(STAGE_WIDTH).fill(<Cell type = {emptyBlock().color}/>)));
 
-    const updateStage = useCallback ((currentBlock, prevStage) => {
+    const updateStage = useCallback ((currentBlock, prevStage, prevPosition, prevPosition2) => {
         let newStage = createStage();
+        for (let i = 0; i < STAGE_HEIGHT; i++) {
+            for (let j = 0; j < STAGE_WIDTH; j++) {
+                newStage[i][j] = prevStage[i][j];
+            }
+        };
+        if (prevPosition && prevPosition2 ) {
+            newStage[prevPosition.y][prevPosition.x] = <Cell type = {emptyBlock().color}/>;
+            newStage[prevPosition2.y][prevPosition2.x] = <Cell type = {emptyBlock().color}/>;
+        }
         // Will need to implement some form of keeping blocks saved
         // to:do guarantee different colours between the top and bottom
         let temp = (currentBlock.dir > 1) ? currentBlock.color1 : currentBlock.color;
         let tempcolor1 =  (currentBlock.dir > 1) ? currentBlock.color : currentBlock.color1;
         newStage[currentBlock.position.y][currentBlock.position.x] = <Cell type = {temp}/>;
-        
-        if (currentBlock.dir === 0 || currentBlock.dir === 2) {
-            newStage[currentBlock.position.y + 1][currentBlock.position.x] = <Cell type = {tempcolor1}/>;
-        } else {
-            newStage[currentBlock.position.y][currentBlock.position.x - 1] = <Cell type = {tempcolor1}/>;
-        }
+        newStage[currentBlock.position2.y][currentBlock.position2.x] = <Cell type = {tempcolor1}/>;
         return newStage;
     }, []);
 
@@ -33,5 +37,15 @@ export const useStage = (currentBlock, resetCurrentBlock) => {
         return newStage;
     }, []);
 
-    return [stage, setStage, resetStage, updateStage];
+    const registerCollision = (block, stage) => {
+        let newStage = createStage();
+        for (let i = 0; i < STAGE_HEIGHT; i++) {
+            for (let j = 0; j < STAGE_WIDTH; j++) {
+                newStage[i][j] = stage[i][j];
+            }
+        }
+        return newStage;
+    }
+
+    return [stage, setStage, resetStage, updateStage, registerCollision];
 }

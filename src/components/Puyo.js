@@ -17,7 +17,7 @@ const Puyo = () => {
   // GameOver is initially false
   const [gameOver, setGameOver] = useState(false);
   const [currentBlock, setCurBlock, updateCurPos, resetCurPos, rotateCurBlock] = useCurrentBlock();
-  const [stage, setStage, resetStage, updateStage] = useStage(currentBlock);
+  const [stage, setStage, resetStage, updateStage, registerCollision] = useStage(currentBlock);
 
   console.log("rerender");
 
@@ -44,20 +44,40 @@ const Puyo = () => {
     }
   } 
 
-  const rotateBlock = () => {
-    if (checkRotationBoundaries(currentBlock)){
-      let block = rotateCurBlock(currentBlock);
-      setCurBlock(block);
-      setStage(updateStage(block, stage));
-      //checkCollision();
+  const checkCollision = (block, stage) => {
+    console.log(block.position.y);
+    if (block.position.y === STAGE_HEIGHT - 2) {
+      return true;
+    } else {
+      return false;
     }
   }
 
-  const moveBlock = (xdir, ydir) => {
-    if (checkBoundaries(currentBlock, xdir, ydir)) {
-      let block = updateCurPos(currentBlock, xdir, ydir)
+  const handleCollision = (block, stage) => {
+    console.log("collision!");
+    let upperColor = randomBlock().color;
+    let lowerColor = randomBlock().color;
+    let newStage = registerCollision(block, stage, upperColor, lowerColor);
+    setStage(newStage);
+    setCurBlock(resetCurPos(upperColor, lowerColor));
+  }
+
+  const rotateBlock = (prevPosition, prevPosition2) => {
+    if (checkRotationBoundaries(currentBlock)){
+      let block = rotateCurBlock(currentBlock);
       setCurBlock(block);
-      setStage(updateStage(block, stage));
+      setStage(updateStage(block, stage, prevPosition, prevPosition2));
+    }
+  }
+
+  const moveBlock = (xdir, ydir, prevPosition, prevPosition2) => {
+    if (checkBoundaries(currentBlock, xdir, ydir)) {
+      let block = updateCurPos(currentBlock, xdir, ydir);
+      setStage(updateStage(block, stage, prevPosition, prevPosition2));
+      if (checkCollision(block, stage)) {
+        handleCollision(block, stage);
+      }
+      setCurBlock(block);
   }
   }
   
@@ -71,14 +91,16 @@ const Puyo = () => {
   
   const move = ({ keyCode }) => {
     if (!gameOver) {
+      let prevPosition = Object.assign({}, currentBlock.position);
+      let prevPosition2 = Object.assign({}, currentBlock.position2);
       if (keyCode === 37) {
-          moveBlock(-1, 0);
+          moveBlock(-1, 0, prevPosition, prevPosition2);
       } else if (keyCode === 39) {
-          moveBlock(1, 0);
+          moveBlock(1, 0, prevPosition, prevPosition2);
       } else if (keyCode === 40) {
-          moveBlock(0, 1)
+          moveBlock(0, 1, prevPosition, prevPosition2)
       } else if (keyCode === 38) {
-         rotateBlock();
+         rotateBlock(prevPosition, prevPosition2);
       }
     }
   }
