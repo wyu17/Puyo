@@ -17,7 +17,7 @@ export const useStage = (currentBlock, resetCurrentBlock) => {
                 newStage[i][j] = prevStage[i][j];
             }
         };
-        if (prevPosition && prevPosition2 ) {
+        if (prevPosition && prevPosition2) {
             newStage[prevPosition.y][prevPosition.x] = <Cell type = {emptyBlock().color}/>;
             newStage[prevPosition2.y][prevPosition2.x] = <Cell type = {emptyBlock().color}/>;
         }

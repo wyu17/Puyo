@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import {randomBlock } from '../block';
-import { PUYO_COL, PUYO_ROW } from '../gameHelpers';
+import { PUYO_COL, PUYO_ROW, rotationPosition, rotationPosition2 } from '../gameHelpers';
 
 export const useCurrentBlock = () => {
     // dir = 0 is up, dir = 1 is right, dir = 2 is down, dir = 3 is pointing left
@@ -34,28 +34,11 @@ export const useCurrentBlock = () => {
     };
 
     const rotateCurBlock = (prev) => {
-        let curX = prev.position.x;
-        let curY = prev.position.y;
-        let curX2 = prev.position2.x;
-        let curY2 = prev.position.y;
         let newDir = (prev.dir + 1 ) % 4;
-        let newPos, newPos2;
-        if (newDir === 0) {
-            newPos = {x: curX, y: curY - 1};
-            newPos2 = {x: curX2 + 1, y: curY2};
-        } else if (newDir === 1) {
-            newPos = {x: curX + 1, y: curY + 1};
-            newPos2 = {x: curX2, y: curY2 + 1};
-        } else if (newDir === 2) {
-            newPos = {x: curX - 1, y: curY};
-            newPos2 = {x: curX2, y: curY2 + 1};
-        } else if (newDir === 3) {
-            newPos = {x: curX, y: curY};
-            newPos2 = {x: curX2 - 1, y: curY2};
-        }
+        let newPositions = rotationPosition(prev, newDir);
         return {
-            position: newPos,
-            position2: newPos2,
+            position: newPositions.position,
+            position2: newPositions.position2,
             color: prev.color,
             color1: prev.color1,
             dir: newDir
