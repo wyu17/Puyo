@@ -1,10 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { createStage, STAGE_HEIGHT, STAGE_WIDTH } from '../gameHelpers';
+import { useState, useCallback } from 'react';
+import { createStage, STAGE_HEIGHT, STAGE_WIDTH, PUYO_COL, PUYO_ROW } from '../gameHelpers';
 import Cell from '../components/Cell';
-import { randomBlock } from '../block';
 import { emptyBlock } from '../block';
-import { BLOCK } from '../block';
-import { PUYO_COL, PUYO_ROW } from '../gameHelpers';
 
 export const useStage = (currentBlock, resetCurrentBlock) => {
     // Initial State
@@ -51,7 +48,7 @@ export const useStage = (currentBlock, resetCurrentBlock) => {
 
     const emptyHeights = (heights) => {
         for (let i = 0; i < heights.length; i++) {
-            if (heights[i].number != 0) {
+            if (heights[i].number !== 0) {
                 return false;
             }
         }
@@ -84,7 +81,7 @@ export const useStage = (currentBlock, resetCurrentBlock) => {
         }
         while (!emptyHeights(heights)) {
             for (let i = 0; i < heights.length; i++) {
-                if (heights[i].number != 0) {
+                if (heights[i].number !== 0) {
                     for (let j = heights[i].minHeight; j > 0; j--) {
                         newStage[j][i] = <Cell type = {newStage[j - 1][i].props.type}/>;
                     }

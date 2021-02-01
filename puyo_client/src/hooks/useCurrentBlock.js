@@ -1,6 +1,5 @@
-import { useState, useCallback } from 'react';
-import {randomBlock } from '../block';
-import { PUYO_COL, PUYO_ROW, rotationPosition, rotationPosition2 } from '../gameHelpers';
+import { useState } from 'react';
+import { PUYO_COL, PUYO_ROW, rotationPosition } from '../gameHelpers';
 
 export const useCurrentBlock = () => {
     // dir = 0 is up, dir = 1 is right, dir = 2 is down, dir = 3 is pointing left

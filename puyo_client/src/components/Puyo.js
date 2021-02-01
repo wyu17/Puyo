@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { createStage , STAGE_HEIGHT, STAGE_WIDTH, PUYO_COL, PUYO_ROW, rotationPosition } from '../gameHelpers';
+import { STAGE_HEIGHT, STAGE_WIDTH, PUYO_COL, PUYO_ROW, rotationPosition } from '../gameHelpers';
 import Stage from './Stage';
 import Display from './Display';
 import Button from './Button';
@@ -138,7 +138,7 @@ const Puyo = () => {
     for (let y = 0; y < STAGE_HEIGHT; y++) {
       for (let x = 0; x < STAGE_WIDTH; x++) {
           let type = stage[y][x].props.type;
-          if (type != "EMPTY" && !removablesContains(removables, x, y)) {
+          if (type !== "EMPTY" && !removablesContains(removables, x, y)) {
             let newPosition = [];
             let newRemovables = removalHelper(removables, newPosition, type, stage, x, y);
             if (newRemovables.length > 0) {
@@ -181,7 +181,7 @@ const Puyo = () => {
       scoreMultiplier++;
     }
     // The player loses if the space where new blocks are spawned is occupied (i.e not EMPTY)
-    if (newStage[PUYO_ROW][PUYO_COL].props.type != "EMPTY" || newStage[PUYO_ROW + 1][PUYO_COL].props.type != "EMPTY") {
+    if (newStage[PUYO_ROW][PUYO_COL].props.type !== "EMPTY" || newStage[PUYO_ROW + 1][PUYO_COL].props.type !== "EMPTY") {
       setTimeout(function() {setScore(0)}, 1000);
       setTimeout(function() {setGameOver(true)}, 1000);
     } else {

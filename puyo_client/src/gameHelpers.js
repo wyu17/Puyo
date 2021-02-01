@@ -1,5 +1,4 @@
 import Cell from './components/Cell';
-import { randomBlock } from './block';
 import { emptyBlock } from './block';
 
 // Stage size constants
