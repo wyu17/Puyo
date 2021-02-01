@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { createStage , STAGE_HEIGHT, STAGE_WIDTH, rotationPosition } from '../gameHelpers';
+import { createStage , STAGE_HEIGHT, STAGE_WIDTH, PUYO_COL, PUYO_ROW, rotationPosition } from '../gameHelpers';
 import Stage from './Stage';
 import Display from './Display';
 import Button from './Button';
@@ -8,6 +8,7 @@ import Button from './Button';
 import { useState } from 'react';
 import { useCurrentBlock } from '../hooks/useCurrentBlock';
 import { useStage } from '../hooks/useStage';
+import { useInterval } from '../hooks/useInterval';
 import { randomBlock } from '../block';
 
 import "./Puyo.css";
@@ -18,7 +19,7 @@ const Puyo = () => {
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [currentBlock, setCurBlock, updateCurPos, resetCurPos, rotateCurBlock] = useCurrentBlock();
-  const [stage, setStage, resetStage, updateStage, registerCollision] = useStage(currentBlock);
+  const [stage, setStage, resetStage, updateStage, registerCollision, handleRemoval] = useStage(currentBlock);
 
   console.log("rerender");
 
@@ -39,11 +40,10 @@ const Puyo = () => {
     let yPos = currentBlock.position.y;
     let dir = currentBlock.dir;
     let futurePosition = rotationPosition(currentBlock, (dir + 1 ) % 4);
-    console.log(futurePosition.position);
     // Prevents rotation from upright to right on the right edge, rotating down on the bottom and rotating to the left on the left edge
     if ((dir === 0 && xPos === STAGE_WIDTH - 1) || (dir === 1 && yPos === STAGE_HEIGHT - 1) || (dir === 2 && xPos === 0) ||
-    ((dir === 0 || dir === 3) && stage[futurePosition.position.y][futurePosition.position.x].props.type != "EMPTY") || 
-    ((dir === 1 || dir === 2) && stage[futurePosition.position2.y][futurePosition.position2.x].props.type != "EMPTY")) { // Prevents rotating into existing block
+    ((dir === 0 || dir === 3) && stage[futurePosition.position.y][futurePosition.position.x].props.type !== "EMPTY") || 
+    ((dir === 1 || dir === 2) && stage[futurePosition.position2.y][futurePosition.position2.x].props.type !== "EMPTY")) { // Prevents rotating into existing block
       return false;
     } else {
       return true;
@@ -51,22 +51,145 @@ const Puyo = () => {
   } 
 
   const checkCollision = (block, stage) => {
-    console.log(block.position2.y);
-    if ((block.position2.y === STAGE_HEIGHT - 1) || (stage[block.position2.y + 1][block.position2.x].props.type != "EMPTY") || 
-    ((block.dir === 1 || block.dir === 3) && stage[block.position.y + 1][block.position.x].props.type != "EMPTY")) {
+    if ((block.position2.y === STAGE_HEIGHT - 1) || (stage[block.position2.y + 1][block.position2.x].props.type !== "EMPTY") || 
+    ((block.dir === 1 || block.dir === 3) && stage[block.position.y + 1][block.position.x].props.type !== "EMPTY")) {
       return true;
     } else {
       return false;
     }
   }
 
-  const handleCollision = (block, stage) => {
+  const removablesContains = (array, x, y) => {
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < array[i].length; j++) {
+      if (array[i][j].x === x && array[i][j].y === y) {
+        return true;
+      }
+    }
+  }
+    return false
+  }
+
+  const positionArrayContains = (array, x, y) => {
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].x === x && array[i].y === y) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Recursive depth first search to find all connected blocks with the same colour
+  const removalHelper = (removables, position, type, stage, x, y) => {
+    if (removablesContains(removables, x, y) || positionArrayContains(position, x, y)) {
+      return null;
+    }
+    let newPosition = {x: x, y: y};
+    position.push(newPosition);
+
+    // Right
+    if (x + 1 < STAGE_WIDTH) {
+      if (stage[y][x + 1].props.type === type) {
+        let anotherBlock = removalHelper(removables, position, type, stage, x + 1, y);
+        if (anotherBlock !== null) {
+          position = anotherBlock;
+        }
+     }
+    }
+    
+    // Under
+    if (y + 1 < STAGE_HEIGHT) {
+      if (stage[y + 1][x].props.type === type) {
+        let anotherBlock = removalHelper(removables, position, type, stage, x, y + 1);
+        if (anotherBlock !== null) {
+          position = anotherBlock;
+        }
+      }
+    }
+    
+    // Left
+    if (x !== 0) {
+      if (stage[y][x - 1].props.type === type) {
+        let anotherBlock = removalHelper(removables, position, type, stage, x - 1, y);
+        if (anotherBlock !== null) {
+          position = anotherBlock;
+        }
+      }
+    }
+    
+    
+    // Over
+    if (y !== 0) {
+     if (stage[y - 1][x].props.type === type) {
+        let anotherBlock = removalHelper(removables, position, type, stage, x, y - 1);
+        if (anotherBlock !== null) {
+          position = anotherBlock;
+        }
+      }
+    }
+    return position;
+  }
+
+  const removeBlocks = (stage) => {
+    let removables = [];
+    let heights = new Array(6);
+    heights.fill(0);
+    // i = y, j  = x
+    for (let y = 0; y < STAGE_HEIGHT; y++) {
+      for (let x = 0; x < STAGE_WIDTH; x++) {
+          let type = stage[y][x].props.type;
+          if (type != "EMPTY" && !removablesContains(removables, x, y)) {
+            let newPosition = [];
+            let newRemovables = removalHelper(removables, newPosition, type, stage, x, y);
+            if (newRemovables.length > 0) {
+              for (let k = 0; k < newRemovables.length; k++) {
+                heights[newRemovables[k].x]++;
+              }
+            }
+            removables.push(newRemovables);
+          }
+      }
+    }
+    let extraScore = 0;
+    for (let i = 0; i < removables.length; i++) {
+      if (removables[i].length >= 4) {
+          for (let j = 0; j < removables[i].length; j++) {
+            extraScore = extraScore + 10;
+          }
+      }
+    }
+    let newStage = handleRemoval(stage, removables);
+    setStage(newStage);
+    return [newStage, extraScore]
+  }
+
+  const handleCollision = (block, prevStage) => {
     let upperColor = randomBlock().color;
     let lowerColor = randomBlock().color;
-    let newStage = registerCollision(block, stage, upperColor, lowerColor);
-    setStage(newStage);
-    let newBlock = resetCurPos(upperColor, lowerColor)
-    setCurBlock(newBlock);
+    let scoreMultiplier = 1;
+    let allBlocksRemoved = false;
+    let newStage = prevStage;
+    while (!allBlocksRemoved) {
+      let removalResult = removeBlocks(newStage);
+      newStage = removalResult[0];
+      let newScore = removalResult[1];
+      if (newScore === 0) {
+        allBlocksRemoved = true;
+      } else {
+        setScore(score + newScore * scoreMultiplier);
+      }
+      scoreMultiplier++;
+    }
+    // The player loses if the space where new blocks are spawned is occupied (i.e not EMPTY)
+    if (newStage[PUYO_ROW][PUYO_COL].props.type != "EMPTY" || newStage[PUYO_ROW + 1][PUYO_COL].props.type != "EMPTY") {
+      setTimeout(function() {setScore(0)}, 1000);
+      setTimeout(function() {setGameOver(true)}, 1000);
+    } else {
+      newStage = registerCollision(block, newStage, upperColor, lowerColor);
+      setStage(newStage);
+      let newBlock = resetCurPos(upperColor, lowerColor)
+      setCurBlock(newBlock);
+    }
   }
 
   const moveBlock = (xdir, ydir, prevPosition, prevPosition2, rotate) => {
@@ -89,6 +212,7 @@ const Puyo = () => {
   
   const startGame = () => {
     // Providing the colours in this file maintains colour state across the current block and the stage
+    setGameOver(false);
     let upperColor = randomBlock().color;
     let lowerColor = randomBlock().color;
     setCurBlock(resetCurPos(upperColor, lowerColor));
@@ -111,6 +235,18 @@ const Puyo = () => {
       }
     }
   }
+
+  const moveWrapper = () => {
+    console.log("automove!");
+    let prevPosition = Object.assign({}, currentBlock.position);
+    let prevPosition2 = Object.assign({}, currentBlock.position2);
+    moveBlock(0, 1, prevPosition, prevPosition2, false);
+  }
+
+  // Moves the player's block down every 300 milliseconds
+  useInterval(() => {
+    moveWrapper();
+  }, 300);
 
   // Different screen for game over
   if (!gameOver) {

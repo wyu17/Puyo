@@ -49,5 +49,52 @@ export const useStage = (currentBlock, resetCurrentBlock) => {
         return newStage;
     }
 
-    return [stage, setStage, resetStage, updateStage, registerCollision];
+    const emptyHeights = (heights) => {
+        for (let i = 0; i < heights.length; i++) {
+            if (heights[i].number != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const handleRemoval = (stage, removables) => {
+        let newStage = createStage();
+        for (let i = 0; i < STAGE_HEIGHT; i++) {
+            for (let j = 0; j < STAGE_WIDTH; j++) {
+                newStage[i][j] = stage[i][j];
+            }
+        }
+        let heights = new Array(6);
+        for (let i = 0; i < 6; i++) {
+            heights[i] = {number: 0, minHeight: 0};
+        }
+        for (let i = 0; i < removables.length; i++) {
+            if (removables[i].length >= 4) {
+                for (let j = 0; j < removables[i].length; j++) {
+                    let removeX = removables[i][j].x;
+                    let removeY = removables[i][j].y;
+                    newStage[removeY][removeX] =  <Cell type = {emptyBlock().color}/>;
+                    heights[removeX].number++;
+                    if (heights[removeX].minHeight < removeY) {
+                        heights[removeX].minHeight = removeY;
+                    }
+                }
+            }
+        }
+        while (!emptyHeights(heights)) {
+            for (let i = 0; i < heights.length; i++) {
+                if (heights[i].number != 0) {
+                    for (let j = heights[i].minHeight; j > 0; j--) {
+                        newStage[j][i] = <Cell type = {newStage[j - 1][i].props.type}/>;
+                    }
+                    newStage[0][i] = <Cell type = {emptyBlock().color}/>;
+                    heights[i].number--;
+                }
+            }
+        }
+        return newStage;
+    }
+
+    return [stage, setStage, resetStage, updateStage, registerCollision, handleRemoval];
 }
