@@ -1,5 +1,4 @@
 name: Puyo CI/CD
-// We want to updates pages when main is pushed to
 on:
   push:
     branches:
