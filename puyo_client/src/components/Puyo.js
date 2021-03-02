@@ -26,7 +26,22 @@ const Puyo = () => {
   const checkBoundaries = (currentBlock, xdir, ydir) => {
     let xPos = currentBlock.position.x;
     let xPos2 = currentBlock.position2.x;
+    let yPos = currentBlock.position.y;
     let yPos2 = currentBlock.position2.y;
+    // Prevent overlapping blocks moving left
+    if (xPos > 0) {
+      if ((stage[yPos2][xPos2 - 1].props.type !== "EMPTY" && xdir === -1) || 
+      ((currentBlock.dir === 0 || currentBlock.dir === 2) && stage[yPos][xPos - 1].props.type !== "EMPTY" && xdir === 1)) {
+        return false;
+      }
+    }
+    // PRevent overlapping blocks moving right
+    if (xPos < STAGE_WIDTH - 1) {
+      if ((stage[yPos2][xPos2 + 1].props.type !== "EMPTY" && xdir === 1)
+      || ((currentBlock.dir === 0 || currentBlock.dir === 2) && stage[yPos][xPos + 1].props.type !== "EMPTY" && xdir === 1)) {
+        return false;
+      }
+    }
     // STAGE_HEIGHT - 2 because 0 based indexing on coordinates, and position counts the top block so must end one earlier
     if ((xPos2 === 0 && xdir === -1) || (xPos === STAGE_WIDTH - 1 && xdir === 1) || (yPos2 === STAGE_HEIGHT - 1 && ydir === 1)) {
       return false;
@@ -184,6 +199,7 @@ const Puyo = () => {
     if (newStage[PUYO_ROW][PUYO_COL].props.type !== "EMPTY" || newStage[PUYO_ROW + 1][PUYO_COL].props.type !== "EMPTY") {
       setTimeout(function() {setScore(0)}, 1000);
       setTimeout(function() {setGameOver(true)}, 1000);
+      setTimeout(function() {window.location.reload()}, 3000);
     } else {
       newStage = registerCollision(block, newStage, upperColor, lowerColor);
       setStage(newStage);
@@ -213,12 +229,13 @@ const Puyo = () => {
   const startGame = () => {
     // Providing the colours in this file maintains colour state across the current block and the stage
     setGameOver(false);
+    setScore(0);
     let upperColor = randomBlock().color;
     let lowerColor = randomBlock().color;
     setCurBlock(resetCurPos(upperColor, lowerColor));
     setStage(resetStage(upperColor, lowerColor));
   }
-  
+
   const move = ({ keyCode }) => {
     if (!gameOver) {
       // Copy by value to preserve previous position
@@ -237,7 +254,6 @@ const Puyo = () => {
   }
 
   const moveWrapper = () => {
-    console.log("automove!");
     let prevPosition = Object.assign({}, currentBlock.position);
     let prevPosition2 = Object.assign({}, currentBlock.position2);
     moveBlock(0, 1, prevPosition, prevPosition2, false);
@@ -264,10 +280,7 @@ const Puyo = () => {
   } else {
     return (
       <div>
-      <h2> Game Over! Do you want to play again? </h2>
-      <div className = "startButton">
-      <Button callBack = { startGame } text = "New Game"/>
-      </div>
+      <h2 className = "gameOver"> Game Over! Better luck next time! </h2>
       </div>
     )
   }
