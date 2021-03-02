@@ -201,7 +201,7 @@ const Puyo = () => {
       setGameStart(false);
       setTimeout(function() {setScore(0)}, 1000);
       setTimeout(function() {setGameOver(true)}, 1000);
-      setTimeout(function() {window.location.reload()}, 3500);
+      setTimeout(function() {window.location.reload()}, 3000);
     } else {
       newStage = registerCollision(block, newStage, upperColor, lowerColor);
       setStage(newStage);
