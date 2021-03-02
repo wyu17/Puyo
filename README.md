@@ -6,7 +6,7 @@ Currently hosted using Github Pages at https://wyu17.github.io/Puyo/.
 
 ## How To Play
 
-Left and right arrow keys move the puyo block left and right. The up arrow rotates the current block, while the down arrow will increase the speed the current block falls to the ground. Matching four blocks of the same colour will cause them to disappear and for the player to gain points. This can cause chains after the first blocks have disappeared: this will cause the player to gain more points.
+Left and right arrow keys move the puyo block left and right. The up arrow rotates the current block, while the down arrow will increase the speed the current block falls to the ground. Matching four blocks of the same colour will cause them to disappear and for the player to gain points. This can cause a chain reaction after the first blocks have disappeared where blocks fall and cause more blocks to dissappear: this will increases the number of points gained by the player.
 
 The player loses once a new block cannot be created (i.e the initial point is obstructed by other blocks).
 
