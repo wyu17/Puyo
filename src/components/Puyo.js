@@ -260,9 +260,11 @@ const Puyo = () => {
   }
 
   // Moves the player's block down every 300 milliseconds
-  useInterval(() => {
-    moveWrapper();
-  }, 300);
+  if (!gameOver) {
+    useInterval(() => {
+      moveWrapper();
+    }, 300);
+  }
 
   // Different screen for game over
   if (!gameOver) {
