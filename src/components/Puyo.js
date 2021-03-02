@@ -148,6 +148,7 @@ const Puyo = () => {
     return position;
   }
 
+  // Remove connected blocks
   const removeBlocks = (stage) => {
     let removables = [];
     let heights = new Array(6);
