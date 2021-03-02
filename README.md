@@ -20,7 +20,7 @@ After the dependencies have been installed with npm install, the application can
 
 The hosted app will then be accessible at localhost:3000.  
 
-## Planned Features:
+## Planned Features
 
 ### Multiplayer
 
