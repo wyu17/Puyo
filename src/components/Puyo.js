@@ -16,6 +16,7 @@ import "./Puyo.css";
 
 const Puyo = () => {
   // GameOver is initially false
+  const [gameStart, setGameStart] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [currentBlock, setCurBlock, updateCurPos, resetCurPos, rotateCurBlock] = useCurrentBlock();
@@ -197,6 +198,7 @@ const Puyo = () => {
     }
     // The player loses if the space where new blocks are spawned is occupied (i.e not EMPTY)
     if (newStage[PUYO_ROW][PUYO_COL].props.type !== "EMPTY" || newStage[PUYO_ROW + 1][PUYO_COL].props.type !== "EMPTY") {
+      setGameStart(false);
       setTimeout(function() {setScore(0)}, 1000);
       setTimeout(function() {setGameOver(true)}, 1000);
       setTimeout(function() {window.location.reload()}, 3000);
@@ -229,6 +231,7 @@ const Puyo = () => {
   const startGame = () => {
     // Providing the colours in this file maintains colour state across the current block and the stage
     setGameOver(false);
+    setGameStart(true);
     setScore(0);
     let upperColor = randomBlock().color;
     let lowerColor = randomBlock().color;
@@ -254,17 +257,17 @@ const Puyo = () => {
   }
 
   const moveWrapper = () => {
-    let prevPosition = Object.assign({}, currentBlock.position);
-    let prevPosition2 = Object.assign({}, currentBlock.position2);
-    moveBlock(0, 1, prevPosition, prevPosition2, false);
+    if (gameStart) {
+      let prevPosition = Object.assign({}, currentBlock.position);
+      let prevPosition2 = Object.assign({}, currentBlock.position2);
+      moveBlock(0, 1, prevPosition, prevPosition2, false);
+    }
   }
 
   // Moves the player's block down every 300 milliseconds
-  if (!gameOver) {
-    useInterval(() => {
-      moveWrapper();
-    }, 300);
-  }
+  useInterval(() => {
+    moveWrapper();
+  }, 300);
 
   // Different screen for game over
   if (!gameOver) {
