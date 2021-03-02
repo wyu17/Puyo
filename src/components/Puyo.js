@@ -24,6 +24,7 @@ const Puyo = () => {
 
   console.log("rerender");
 
+// Determines if a block can be moved in the given x and y directions
   const checkBoundaries = (currentBlock, xdir, ydir) => {
     let xPos = currentBlock.position.x;
     let xPos2 = currentBlock.position2.x;
@@ -51,6 +52,7 @@ const Puyo = () => {
     }
   }
 
+  // Determines if a rotation is valid at the given position
   const checkRotationBoundaries = (currentBlock) => {
     let xPos = currentBlock.position.x;
     let yPos = currentBlock.position.y;
