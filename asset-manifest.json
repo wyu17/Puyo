@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/Puyo/static/css/main.1c3a471e.chunk.css",
+    "main.js": "/Puyo/static/js/main.33e7a47d.chunk.js",
+    "main.js.map": "/Puyo/static/js/main.33e7a47d.chunk.js.map",
+    "runtime-main.js": "/Puyo/static/js/runtime-main.151ea5c3.js",
+    "runtime-main.js.map": "/Puyo/static/js/runtime-main.151ea5c3.js.map",
+    "static/js/2.0f785897.chunk.js": "/Puyo/static/js/2.0f785897.chunk.js",
+    "static/js/2.0f785897.chunk.js.map": "/Puyo/static/js/2.0f785897.chunk.js.map",
+    "index.html": "/Puyo/index.html",
+    "static/css/main.1c3a471e.chunk.css.map": "/Puyo/static/css/main.1c3a471e.chunk.css.map",
+    "static/js/2.0f785897.chunk.js.LICENSE.txt": "/Puyo/static/js/2.0f785897.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.151ea5c3.js",
+    "static/js/2.0f785897.chunk.js",
+    "static/css/main.1c3a471e.chunk.css",
+    "static/js/main.33e7a47d.chunk.js"
+  ]
+}
