@@ -30,6 +30,10 @@ Being able to play with others competitively is planned for implementation.
 
 Pausing the game, and difficulty levels are planned for implementation.
 
+### Mobile functionality
+
+The game cannot currently be played on mobile browsers.
+
 ## Credits
 
 ### Dan Abramov's setInterval hook 
